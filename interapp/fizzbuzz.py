@@ -1,7 +1,7 @@
 import random
 import re
 
-CONS = ['B', 'Ch', 'D', 'G', 'H', 'J', 'L', 'M', 'N', 'P', 'R', 'S', 'Sh', 'T', 'Y'] # noqa
+CONS = ['B', 'D', 'F', 'G', 'H', 'J', 'L', 'N', 'P', 'R', 'S', 'V', 'Y', 'W', 'Z'] # noqa
 VOWL = ['a', 'e', 'i', 'o', 'u']
 
 
@@ -65,13 +65,14 @@ def fill_numbers(numbers: list, total: int):
     except TypeError or ValueError:
         raise
     else:
+        # Add contiguous primes from least after max(numbers)
         pass
 
 
 def validate_words(words: list):
     if any(not isinstance(s, str) for s in words):
         raise TypeError("words list must only contain str")
-    pattern = fr"^([^h]&[{('').join(CONS)}])h?[{('').join(VOWL)}]zz"
+    pattern = fr"^[{('').join(CONS)}][{('').join(VOWL)}]zz$"
     if any(not bool(re.search(pattern, s)) for s in words):
         raise ValueError("str in word list must be of format Fizz Buzz")
 
