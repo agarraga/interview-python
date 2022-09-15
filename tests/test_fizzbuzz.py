@@ -1,34 +1,44 @@
 import pytest
 from interapp import fizzbuzz
 
+def test_default_fizzbuzz():
+    with open("tests/default_output.txt", "r") as file:
+        default = file.read()
+    pairs = [fizzbuzz.Pair(3, "Fizz"), fizzbuzz.Pair(5, "Buzz")]
+    output = '\n'.join(fizzbuzz.fizzbuzz(pairs)) + '\n'
+    assert output == default
+
+
 def test_validate_numbers_good():
-    output = fizzbuzz.validate_numbers([1, 3, 5])
-    assert output == None
+    output = fizzbuzz.validate_number(1)
+    assert output is None
 
-def test_validate_numbers_type_error():
-    with pytest.raises(TypeError):
-        fizzbuzz.validate_numbers([0, 1, "2"])
 
-def test_validate_numbers_value_error():
+def test_validate_numbers_value_error_0():
     with pytest.raises(ValueError):
-        fizzbuzz.validate_numbers([0, -1, 2])
+        fizzbuzz.validate_number(-1)
+
+
+def test_validate_numbers_value_error_1():
+    with pytest.raises(ValueError):
+        fizzbuzz.validate_number(0)
+
 
 def test_validate_words_good():
-    output = fizzbuzz.validate_words(["Fizz", "Buzz", "Nozz"])
-    assert output == None
+    output = fizzbuzz.validate_word("Fizz")
+    assert output is None
+
 
 def test_validate_words_value_error_0():
     with pytest.raises(ValueError):
-        fizzbuzz.validate_words(["Fizz", "Buzz", "cuzz"])
+        fizzbuzz.validate_word("cuzz")
+
 
 def test_validate_words_value_error_1():
     with pytest.raises(ValueError):
-        fizzbuzz.validate_words(["Fizz", "Buzz", "suzz "])
+        fizzbuzz.validate_word("suzz ")
+
 
 def test_validate_words_value_error_2():
     with pytest.raises(ValueError):
-        fizzbuzz.validate_words(["Fizz", "Buzz", "Fizs"])
-
-def test_validate_words_type_error():
-    with pytest.raises(TypeError):
-        fizzbuzz.validate_words(["Fizz", "Buzz", False])
+        fizzbuzz.validate_word("Fizs")

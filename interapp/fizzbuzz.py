@@ -7,34 +7,29 @@ VOWL = ['a', 'e', 'i', 'o', 'u']
 
 class Pair:
     def __init__(self, number: int, word: str):
-        self.number = number
-        self.word = word
+        try:
+            validate_number(number)
+            validate_word(word)
+        except ValueError:
+            raise
+        else:
+            self.number = number
+            self.word = word
 
 
-def fizzbuzz(numbers: list, words: list, n: int) -> list:
+def fizzbuzz(pairs: list, n: int = 100) -> list:
     if n < 1:
         raise ValueError("Invalid number: n must be bigger or equal to 1")
     try:
-        validate_words(words)
-        validate_numbers(numbers)
-    except TypeError or ValueError:
+        validate_pairs(pairs)
+    except TypeError:
         raise
     else:
-        bigger_size = 0
-        words_size = len(words)
-        numbers_size = len(numbers)
-
-        if len(numbers) > len(words):
-            bigger_size = numbers_size
-            fill_words(words, bigger_size)
-        elif len(numbers) < len(words):
-            bigger_size = words_size
-            fill_words(words, bigger_size)
-
         results = []
-        pairs = [Pair(pair[0], pair[1]) for pair in zip(numbers, words)]
-        for i in range(n):
+
+        for i in range(1, n + 1):
             output = ""
+
             for pair in pairs:
                 if i % pair.number == 0:
                     output += pair.word + " "
@@ -46,10 +41,28 @@ def fizzbuzz(numbers: list, words: list, n: int) -> list:
         return results
 
 
+def make_pairs(numbers: list, words: list) -> list:
+    try:
+        bigger_size = 0
+        words_size = len(words)
+        numbers_size = len(numbers)
+
+        if len(numbers) > len(words):
+            bigger_size = numbers_size
+            fill_words(words, bigger_size)
+        elif len(numbers) < len(words):
+            bigger_size = words_size
+            fill_words(words, bigger_size)
+
+        return [Pair(pair[0], pair[1]) for pair in zip(numbers, words)]
+    except ValueError:
+        raise
+
+
 def fill_words(words: list, total: int):
     try:
-        validate_words(words)
-    except TypeError:
+        map(validate_word, words)
+    except ValueError:
         raise
     else:
         while len(words) < total:
@@ -61,27 +74,28 @@ def fill_words(words: list, total: int):
 
 def fill_numbers(numbers: list, total: int):
     try:
-        validate_numbers(numbers)
-    except TypeError or ValueError:
+        map(validate_number, numbers)
+    except ValueError:
         raise
     else:
         # Add contiguous primes from least after max(numbers)
         pass
 
 
-def validate_words(words: list):
-    if any(not isinstance(s, str) for s in words):
-        raise TypeError("words list must only contain str")
+def validate_word(word: str):
     pattern = fr"^[{('').join(CONS)}][{('').join(VOWL)}]zz$"
-    if any(not bool(re.search(pattern, s)) for s in words):
+    if not bool(re.search(pattern, word)):
         raise ValueError("str in word list must be of format Fizz Buzz")
 
 
-def validate_numbers(numbers: list):
-    if any(not isinstance(n, int) for n in numbers):
-        raise TypeError("numbers list must only contain int")
-    if any(n < 1 for n in numbers):
+def validate_number(number: int):
+    if number < 1:
         raise ValueError("numbers list must only contain n >= 1")
+
+
+def validate_pairs(pairs: list):
+    if any(not isinstance(p, Pair) for p in pairs):
+        raise TypeError("pairs list must only contain Pair")
 
 
 def infinifizzbuzz():
