@@ -1,7 +1,5 @@
 import sys
-from .fizzbuzz import fizzbuzz
-from .fizzbuzz import infinifizzbuzz
-from .fizzbuzz import Pair
+from .fizzbuzz import fizzbuzz, infinifizzbuzz, Pair
 
 if __name__ == '__main__':
     pairs = [Pair(3, "Fizz"), Pair(5, "Buzz")]
